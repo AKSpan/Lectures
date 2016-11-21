@@ -1,0 +1,15 @@
+.subjects-coll-view {
+    display: inline-block;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.courses-list-view {
+    position: absolute;
+    left: 28%;
+}
+#back-to-main
+{
+    left: calc(50% - 80px);
+    position: relative;
+}
