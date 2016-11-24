@@ -1,12 +1,12 @@
 /**
  * Created by Alexey on 20.11.2016.
  */
-define(["marionette", "models"], function (Mn, models) {
+define(["marionette", "models", "tpl!/Lectures/templates/main.tpl"], function (Mn, models, mainTpl) {
     /**
      * Отображение одного предмета
      */
     var subjectView = Mn.View.extend({
-        className:'subject-view',
+        className: 'subject-view',
         model: models.subject,
         tagName: 'a',
         template: _.template("<%= name %>"),
@@ -26,7 +26,7 @@ define(["marionette", "models"], function (Mn, models) {
      * @type {void|*}
      */
     var emptySubjectView = Mn.View.extend({
-        className:'empty-subject-view',
+        className: 'empty-subject-view',
         tagName: 'h1',
         template: _.template("Nothing to show!")
     });
@@ -35,7 +35,7 @@ define(["marionette", "models"], function (Mn, models) {
      * @type {void|*}
      */
     var subjectsCollView = Mn.CollectionView.extend({
-        className:'subjects-coll-view',
+        className: 'subjects-coll-view',
         childView: subjectView,
         course: undefined,
         initialize: function (options) {
@@ -51,7 +51,7 @@ define(["marionette", "models"], function (Mn, models) {
      * @type {void|*}
      */
     var coursesCollView = Mn.CollectionView.extend({
-        className:'courses-list-view',
+        className: 'courses-list-view',
         emptyView: emptySubjectView,
         childView: subjectsCollView
     });
@@ -59,7 +59,19 @@ define(["marionette", "models"], function (Mn, models) {
      *
      */
     var mainPage = Mn.View.extend({
-        template: _.template('#main-block')
+        template: mainTpl,
+        ui:{
+            addNew:"#add-new-data"
+        },
+        events:{
+            "click @ui.addNew":"addNew"
+        },
+        addNew:function () {
+            console.log('addNew')
+        },
+        regions:{
+            mainBlock:"#main-block"
+        }
     });
     return {
         subjectView: subjectView,

@@ -11,11 +11,14 @@ define(["marionette",
     const Router = {};
     Router.RouterController = {
         showMainPage: function () {
+            console.log('showMainPage')
             $.when(channel.request("get:full:data", subs.url)).done(function (data) {
                 subs.reset(data);
                 require(["appViews", "app"], function (appViews, app) {
                     var application = new app();
-                    application.showView(new appViews.coursesCollView({collection: subs}));
+                    var a = new appViews.mainPage();
+                    application.showView(a);
+                    a.showChildView('mainBlock',new appViews.coursesCollView({collection: subs}))
 
                 })
             });

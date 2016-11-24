@@ -9,8 +9,9 @@ requirejs.config({
         underscore: "vendors/underscore",
         backbone: "vendors/backbone",
         'backbone.radio': "vendors/backbone.radio",
-        localstorage: "vendors/backbone.localStorage",
         marionette: "vendors/backbone.marionette",
+        tpl:"vendors/underscore-tpl",
+        text:"vendors/text",
 
         /*Мои скрипты*/
         app: "app/app",                                     //Скрипт запуска приложения
@@ -33,7 +34,7 @@ requirejs.config({
             exports: "Marionette"
         },
         "jquery-ui": ["jquery"],
-        localstorage: ["backbone"]
+        tpl:["text"]
     }
 });
 

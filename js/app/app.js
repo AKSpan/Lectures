@@ -6,7 +6,7 @@ define([
     "appRouter"
 ], function (Mn, Router) {
     return Mn.Application.extend({
-        region: '#main-block',
+        region: 'body',
         onStart: function () {
             new Router.ApplicationRouter();
             Backbone.history.start();
