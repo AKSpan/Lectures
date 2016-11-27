@@ -1,7 +1,27 @@
 /**
  * Created by Alexey on 20.11.2016.
  */
-define(["marionette", "models", "tpl!/Lectures/templates/main.tpl"], function (Mn, models, mainTpl) {
+define(["marionette", "models",
+    "tpl!/Lectures/templates/add-subject.tpl",
+    "tpl!/Lectures/templates/main.tpl"], function (Mn, models,
+                                                   addSubjTpl,
+                                                   mainPageTpl) {
+
+    var mainPage = Mn.View.extend({
+        template: mainPageTpl,
+        ui: {
+            addNew: "#add-new-data"
+        },
+        events: {
+            "click @ui.addNew": "addNew"
+        },
+        addNew: function () {
+            location.href = "#add-new"
+        },
+        regions: {
+            mainBlock: "#main-block"
+        }
+    });
     /**
      * Отображение одного предмета
      */
@@ -55,22 +75,52 @@ define(["marionette", "models", "tpl!/Lectures/templates/main.tpl"], function (M
         emptyView: emptySubjectView,
         childView: subjectsCollView
     });
+
     /**
-     *
+     * Страница с добавленим файлов
      */
-    var mainPage = Mn.View.extend({
-        template: mainTpl,
-        ui:{
-            addNew:"#add-new-data"
+    var addNew = Mn.View.extend({
+        template: addSubjTpl,
+        choosenFiles:null,
+        ui: {
+            sendDataBtn: "#js-send-new-data",
+            chooseFilesBtn: '#js-choose-files'
         },
         events:{
-            "click @ui.addNew":"addNew"
+            "click @ui.sendDataBtn":"sendFiles",
+            "change @ui.chooseFilesBtn":"chooseFiles"
         },
-        addNew:function () {
-            console.log('addNew')
+        sendFiles:function () {
+            console.log('send')
+            console.log( this.choosenFiles)
+            console.log( this.choosenFiles.length)
+            var formData = new FormData();
+            //for each entry, add to formdata to later access via $_FILES["file" + i]
+            for (var i = 0, len = this.choosenFiles.length; i < len; i++) {
+                formData.append("file" + i, this.choosenFiles[i]);
+            }
+
+            //send formdata to server-side
+            $.ajax({
+                url: "file-upload.php", // our php file
+                type: 'post',
+                data: formData,
+                dataType: 'html', // we return html from our php file
+                async: true,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,   // tell jQuery not to set contentType
+                success : function(data) {
+                   // $('#upload-result').append('<div class="alert alert-success"><p>File(s) uploaded successfully!</p><br />');
+                    //$('#upload-result .alert').append(data);
+                },
+                error : function(request) {
+                    console.log(request.responseText);
+                }
+            });
+
         },
-        regions:{
-            mainBlock:"#main-block"
+        chooseFiles:function () {
+            this.choosenFiles = this.ui.chooseFilesBtn.prop("files");1
         }
     });
     return {
@@ -78,6 +128,7 @@ define(["marionette", "models", "tpl!/Lectures/templates/main.tpl"], function (M
         emptySubjectView: emptySubjectView,
         subjectsCollView: subjectsCollView,
         coursesCollView: coursesCollView,
-        mainPage: mainPage,
+        addNew: addNew,
+        mainPage: mainPage
     };
 });

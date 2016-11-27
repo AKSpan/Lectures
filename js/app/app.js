@@ -3,14 +3,22 @@
  */
 define([
     "marionette",
-    "appRouter"
-], function (Mn, Router) {
-    return Mn.Application.extend({
-        region: 'body',
-        onStart: function () {
-            new Router.ApplicationRouter();
-            Backbone.history.start();
+    "appRouter","appViews"
+], function (Mn, Router, appViews) {
+    /**
+     * Главная вью - подобие layoutView
+     */
+    var mainPage = new appViews.mainPage();
+    return {
+        Application: Mn.Application.extend({
+            region: 'body',
+            onStart: function () {
+                new Router.ApplicationRouter();
+                Backbone.history.start();
+                this.showView(mainPage)
 
-        }
-    });
+            }
+        }),
+        MainView: mainPage
+    };
 });

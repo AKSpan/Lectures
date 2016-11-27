@@ -15,30 +15,31 @@ define(["marionette",
             $.when(channel.request("get:full:data", subs.url)).done(function (data) {
                 subs.reset(data);
                 require(["appViews", "app"], function (appViews, app) {
-                    var application = new app();
-                    var a = new appViews.mainPage();
-                    application.showView(a);
-                    a.showChildView('mainBlock',new appViews.coursesCollView({collection: subs}))
-
+                    app.MainView.ui.addNew.show();
+                    app.MainView.showChildView('mainBlock', new appViews.coursesCollView({collection: subs}));
                 })
             });
         },
         showSubject: function (id) {
             $.when(channel.request("get:subject", id)).done(function (data) {
                 require(["appViews", "app"], function (appViews, app) {
-                    var application = new app();
-                    application.showView(new appViews.subjectView({model: new Backbone.Model(data)}));
+                    app.MainView.showChildView('mainBlock', new appViews.subjectView({model: new Backbone.Model(data)}));
                 })
             });
         },
         showCourse: function (id) {
             $.when(channel.request("get:course", id)).done(function (data) {
                 require(["appViews", "app"], function (appViews, app) {
-                    var application = new app();
-                    application.showView(new appViews.subjectsCollView({model: new Backbone.Model(data)}));
+                    app.MainView.showChildView('mainBlock', new appViews.subjectsCollView({model: new Backbone.Model(data)}));
                 })
             });
+        },
+        addNew: function () {
+            require(["appViews", "app"], function (appViews, app) {
+                app.MainView.ui.addNew.hide();
 
+                app.MainView.showChildView('mainBlock', new appViews.addNew());
+            })
         }
     };
     Router.ApplicationRouter = Mn.AppRouter.extend({
@@ -46,7 +47,8 @@ define(["marionette",
         appRoutes: {
             "": "showMainPage",
             "subject/:id": "showSubject",
-            "course/:id": "showCourse"
+            "course/:id": "showCourse",
+            "add-new": "addNew",
         }
     });
     return Router;
